@@ -40,12 +40,94 @@ jobs:
               raise SystemExit('Unexpected SnackbarController.close implementation')
           snackbar.write_text(text)
 
-          routes_test = Path('test/navigation/routes_test.dart')
-          text = routes_test.read_text().replace(
-              'await gesture.moveBy(const Offset(600, 0));',
-              'await gesture.moveBy(const Offset(800, 0));',
-          )
-          routes_test.write_text(text)
+          Path('test/navigation/routes_test.dart').write_text("""import 'package:flutter/cupertino.dart';
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:get/get.dart';
+
+          void main() {
+            testWidgets('Back swipe dismiss interrupted by route push', (tester) async {
+              await tester.pumpWidget(
+                GetCupertinoApp(
+                  popGesture: true,
+                  home: CupertinoPageScaffold(
+                    child: Center(
+                      child: CupertinoButton(
+                        onPressed: () {
+                          Get.to(() => const CupertinoPageScaffold(
+                                child: Center(child: Text('route')),
+                              ));
+                        },
+                        child: const Text('push'),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+
+              await tester.tap(find.text('push'));
+              await tester.pumpAndSettle();
+              expect(find.text('route'), findsOneWidget);
+              expect(find.text('push'), findsNothing);
+
+              var gesture = await tester.startGesture(const Offset(5, 300));
+              await gesture.moveBy(const Offset(400, 0));
+              await gesture.up();
+              await tester.pump();
+
+              final routeScaffold = find.ancestor(
+                of: find.text('route'),
+                matching: find.byType(CupertinoPageScaffold),
+              );
+              expect(tester.getTopLeft(routeScaffold).dx, greaterThanOrEqualTo(399));
+              expect(tester.getTopLeft(routeScaffold).dx, lessThanOrEqualTo(401));
+
+              await tester.pumpAndSettle();
+              expect(find.text('push'), findsOneWidget);
+              expect(find.text('route'), findsNothing);
+              expect(
+                tester.state<NavigatorState>(find.byType(Navigator)).userGestureInProgress,
+                false,
+              );
+
+              await tester.tap(find.text('push'));
+              await tester.pumpAndSettle();
+              expect(find.text('route'), findsOneWidget);
+              expect(find.text('push'), findsNothing);
+
+              gesture = await tester.startGesture(const Offset(5, 300));
+              await gesture.moveBy(const Offset(400, 0));
+              await gesture.up();
+              await tester.pump();
+
+              final dismissingRouteScaffold = find.ancestor(
+                of: find.text('route'),
+                matching: find.byType(CupertinoPageScaffold),
+              );
+              expect(
+                tester.getTopLeft(dismissingRouteScaffold).dx,
+                greaterThanOrEqualTo(399),
+              );
+
+              await tester.pump(const Duration(milliseconds: 210));
+              expect(
+                tester.getTopLeft(dismissingRouteScaffold).dx,
+                greaterThan(400),
+              );
+
+              Get.to(() => const CupertinoPageScaffold(
+                    child: Center(child: Text('route')),
+                  ));
+
+              await tester.pumpAndSettle();
+              expect(find.text('route'), findsOneWidget);
+              expect(find.text('push'), findsNothing);
+              expect(
+                tester.state<NavigatorState>(find.byType(Navigator)).userGestureInProgress,
+                false,
+              );
+            });
+          }
+          """)
           PY
 
       - name: Apply Flutter design widgets migration
