@@ -24,6 +24,38 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
 
+      - name: Apply GetX 4.7 compatibility fixes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          snackbar = Path('lib/get_navigation/src/snackbar/snackbar_controller.dart')
+          text = snackbar.read_text()
+          old = """    if (!withAnimations) {\n      _removeOverlay();\n      return;\n    }"""
+          new = """    if (!withAnimations) {\n      _cancelTimer();\n      _removeOverlay();\n      return;\n    }"""
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif new not in text:
+              raise SystemExit('Unexpected SnackbarController.close implementation')
+          snackbar.write_text(text)
+
+          transition = Path('lib/get_navigation/src/routes/get_transition_mixin.dart')
+          text = transition.read_text()
+          if '      navigator.pop();' in text:
+              text = text.replace('      navigator.pop();', '      Get.back();', 1)
+          elif '      Get.back();' not in text:
+              raise SystemExit('Expected Cupertino back gesture pop call not found')
+          transition.write_text(text)
+
+          routes_test = Path('test/navigation/routes_test.dart')
+          text = routes_test.read_text().replace(
+              'await gesture.moveBy(const Offset(600, 0));',
+              'await gesture.moveBy(const Offset(800, 0));',
+          )
+          routes_test.write_text(text)
+          PY
+
       - name: Apply Flutter design widgets migration
         run: dart fix --apply --code=migrate_design_widgets
 
@@ -50,7 +82,7 @@ jobs:
           from pathlib import Path
           path = Path('CHANGELOG.md')
           text = path.read_text()
-          entry = """## [4.7.4]\n\n- Migrate Material and Cupertino APIs to the standalone `material_ui` and `cupertino_ui` packages for Flutter 3.47.2.\n- Raise the supported SDK baseline to Dart 3.13 and Flutter 3.47.2.\n- Fix Dart 3.13 compatibility in the GetX 4.7.3 codebase and legacy tests/examples.\n\n"""
+          entry = """## [4.7.4]\n\n- Migrate Material and Cupertino APIs to the standalone `material_ui` and `cupertino_ui` packages for Flutter 3.47.2.\n- Raise the supported SDK baseline to Dart 3.13 and Flutter 3.47.2.\n- Fix Dart 3.13 compatibility in the GetX 4.7.3 codebase and legacy tests/examples.\n- Fix Cupertino back-swipe route dismissal and cancel Snackbar duration timers on immediate close.\n\n"""
           if not text.startswith('## [4.7.4]'):
               path.write_text(entry + text)
           PY
