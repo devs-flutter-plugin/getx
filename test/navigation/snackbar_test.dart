@@ -144,13 +144,16 @@ void main() {
     expect(find.byWidget(getBar), findsOneWidget);
     await tester.ensureVisible(find.byWidget(getBar));
 
-    // Flutter 3.47 applies the Dismissible threshold more strictly. Use a
-    // realistic fling rather than relying on a small fixed 50 px drag.
+    // Drive the Dismissible itself and explicitly advance GetX's 200 ms
+    // post-swipe cleanup timer. pumpAndSettle alone does not advance a timer
+    // when no frame is scheduled by that timer yet.
     await tester.fling(
-      find.byWidget(getBar),
-      const Offset(0.0, 300.0),
-      1000.0,
+      find.byKey(const Key('dismissible')),
+      const Offset(0.0, 400.0),
+      1200.0,
     );
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.pumpAndSettle();
 
     expect(Get.isSnackbarOpen, false);
@@ -211,8 +214,6 @@ void main() {
     await tester.tap(find.byWidget(getBar));
     expect(counter, 1);
 
-    // Close explicitly so the next widget test never inherits an active
-    // snackbar AnimationController from this test.
     await getBarController.close(withAnimations: false);
     await tester.pump();
     expect(Get.isSnackbarOpen, false);
