@@ -71,16 +71,19 @@ jobs:
 
               var gesture = await tester.startGesture(const Offset(5, 300));
               await gesture.moveBy(const Offset(400, 0));
-              await gesture.up();
               await tester.pump();
 
               final routeScaffold = find.ancestor(
                 of: find.text('route'),
                 matching: find.byType(CupertinoPageScaffold),
               );
-              expect(tester.getTopLeft(routeScaffold).dx, greaterThanOrEqualTo(399));
-              expect(tester.getTopLeft(routeScaffold).dx, lessThanOrEqualTo(401));
+              expect(tester.getTopLeft(routeScaffold).dx, moreOrLessEquals(400, epsilon: 1));
+              expect(
+                tester.state<NavigatorState>(find.byType(Navigator)).userGestureInProgress,
+                true,
+              );
 
+              await gesture.up();
               await tester.pumpAndSettle();
               expect(find.text('push'), findsOneWidget);
               expect(find.text('route'), findsNothing);
@@ -96,7 +99,6 @@ jobs:
 
               gesture = await tester.startGesture(const Offset(5, 300));
               await gesture.moveBy(const Offset(400, 0));
-              await gesture.up();
               await tester.pump();
 
               final dismissingRouteScaffold = find.ancestor(
@@ -105,14 +107,15 @@ jobs:
               );
               expect(
                 tester.getTopLeft(dismissingRouteScaffold).dx,
-                greaterThanOrEqualTo(399),
+                moreOrLessEquals(400, epsilon: 1),
+              );
+              expect(
+                tester.state<NavigatorState>(find.byType(Navigator)).userGestureInProgress,
+                true,
               );
 
+              await gesture.up();
               await tester.pump(const Duration(milliseconds: 210));
-              expect(
-                tester.getTopLeft(dismissingRouteScaffold).dx,
-                greaterThan(400),
-              );
 
               Get.to(() => const CupertinoPageScaffold(
                     child: Center(child: Text('route')),
