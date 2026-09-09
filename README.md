@@ -40,6 +40,7 @@
 
 - [About Get](#about-get)
 - [Installing](#installing)
+- [Flutter 3.47 standalone Material package](#flutter-347-standalone-material-package)
 - [Counter App with GetX](#counter-app-with-getx)
 - [The Three pillars](#the-three-pillars)
   - [State management](#state-management)
@@ -127,6 +128,40 @@ Import get in files that it will be used:
 ```dart
 import 'package:get/get.dart';
 ```
+
+## Flutter 3.47 standalone Material package
+
+Flutter 3.47 provides Material widgets and theme types through the standalone
+`material_ui` package. GetX uses the same package for `GetMaterialApp`,
+`ThemeData`, and `ThemeMode`, so applications using Flutter 3.47 or later
+should import Material APIs from `material_ui`:
+
+```yaml
+dependencies:
+  get: any
+  material_ui: any
+```
+
+```dart
+import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
+
+void main() {
+  runApp(
+    GetMaterialApp(
+      theme: ThemeData(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
+      home: const Scaffold(),
+    ),
+  );
+}
+```
+
+Do not import `package:flutter/material.dart` alongside
+`package:material_ui/material_ui.dart` when passing Material types to GetX.
+These packages expose distinct Dart types, so mixing their `ThemeData` or
+`ThemeMode` values causes a type mismatch.
 
 # Counter App with GetX
 
