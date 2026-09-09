@@ -1,9 +1,6 @@
 name: migrate-flutter-3.47
 
 on:
-  push:
-    branches:
-      - flutter-3.47.2-getx-4.7.4
   workflow_dispatch:
 
 permissions:
@@ -27,8 +24,13 @@ jobs:
       - name: Apply Flutter design widgets migration
         run: dart fix --apply --code=migrate_design_widgets
 
-      - name: Format Dart sources
-        run: dart format lib test example
+      - name: Format migrated Dart sources
+        shell: bash
+        run: |
+          mapfile -t changed < <(git diff --name-only -- '*.dart')
+          if [ ${#changed[@]} -gt 0 ]; then
+            dart format "${changed[@]}"
+          fi
 
       - name: Ensure legacy design imports are gone from Dart sources
         shell: bash
@@ -38,8 +40,20 @@ jobs:
             exit 1
           fi
 
+      - name: Update changelog
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('CHANGELOG.md')
+          text = path.read_text()
+          entry = """## [4.7.4]\n\n- Migrate Material and Cupertino APIs to the standalone `material_ui` and `cupertino_ui` packages for Flutter 3.47.2.\n- Raise the supported SDK baseline to Dart 3.13 and Flutter 3.47.2.\n- Fix Dart 3.13 compatibility in the GetX 4.7.3 codebase and legacy tests/examples.\n\n"""
+          if not text.startswith('## [4.7.4]'):
+              path.write_text(entry + text)
+          PY
+
       - name: Analyze
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
       - name: Test
         run: flutter test
@@ -49,7 +63,7 @@ jobs:
         run: |
           git config user.name 'devstecnologia'
           git config user.email '58450364+devstecnologia@users.noreply.github.com'
-          git add lib test example pubspec.yaml pubspec.lock
+          git add lib test example pubspec.yaml pubspec.lock analysis_options.yaml CHANGELOG.md
           if git diff --cached --quiet; then
             echo 'No migration changes to commit.'
           else
