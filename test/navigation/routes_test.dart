@@ -28,7 +28,7 @@ void main() {
     expect(find.text('push'), findsNothing);
 
     var gesture = await tester.startGesture(const Offset(5, 300));
-    await gesture.moveBy(const Offset(400, 0));
+    await gesture.moveBy(const Offset(600, 0));
     await tester.pump();
 
     expect(
@@ -60,7 +60,7 @@ void main() {
     expect(find.text('push'), findsNothing);
 
     gesture = await tester.startGesture(const Offset(5, 300));
-    await gesture.moveBy(const Offset(400, 0));
+    await gesture.moveBy(const Offset(600, 0));
     await tester.pump();
     expect(
       tester
