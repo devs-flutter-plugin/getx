@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 
 class Wrapper extends StatelessWidget {
@@ -23,9 +23,7 @@ class Wrapper extends StatelessWidget {
       translations: WrapperTranslations(),
       locale: WrapperTranslations.locale,
       getPages: namedRoutes,
-      home: Scaffold(
-        body: child,
-      ),
+      home: Scaffold(body: child),
     );
   }
 }
@@ -59,15 +57,15 @@ class WrapperTranslations extends Translations {
   static Locale? get locale => const Locale('en', 'US');
   @override
   Map<String, Map<String, String>> get keys => {
-        'en_US': {
-          'covid': 'Corona Virus',
-          'total_confirmed': 'Total Confirmed',
-          'total_deaths': 'Total Deaths',
-        },
-        'pt_BR': {
-          'covid': 'Corona Vírus',
-          'total_confirmed': 'Total confirmado',
-          'total_deaths': 'Total de mortes',
-        },
-      };
+    'en_US': {
+      'covid': 'Corona Virus',
+      'total_confirmed': 'Total Confirmed',
+      'total_deaths': 'Total Deaths',
+    },
+    'pt_BR': {
+      'covid': 'Corona Vírus',
+      'total_confirmed': 'Total confirmado',
+      'total_deaths': 'Total de mortes',
+    },
+  };
 }

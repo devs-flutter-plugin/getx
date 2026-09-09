@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../get_state_manager.dart';
 
@@ -27,14 +27,15 @@ class MixinBuilder<T extends GetxController> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<T>(
-        init: init,
-        global: global,
-        autoRemove: autoRemove,
-        initState: initState,
-        dispose: dispose,
-        id: id,
-        didChangeDependencies: didChangeDependencies,
-        didUpdateWidget: didUpdateWidget,
-        builder: (controller) => Obx(() => builder.call(controller)));
+      init: init,
+      global: global,
+      autoRemove: autoRemove,
+      initState: initState,
+      dispose: dispose,
+      id: id,
+      didChangeDependencies: didChangeDependencies,
+      didUpdateWidget: didUpdateWidget,
+      builder: (controller) => Obx(() => builder.call(controller)),
+    );
   }
 }

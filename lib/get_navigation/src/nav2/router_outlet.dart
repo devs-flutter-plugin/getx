@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../get.dart';
 
@@ -9,15 +9,13 @@ class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
     BuildContext context,
     TDelegate delegate,
     T? currentRoute,
-  ) builder;
+  )
+  builder;
 
   //keys
-  RouterOutlet.builder({
-    Key? key,
-    TDelegate? delegate,
-    required this.builder,
-  })  : routerDelegate = delegate ?? Get.delegate<TDelegate, T>()!,
-        super(key: key);
+  RouterOutlet.builder({Key? key, TDelegate? delegate, required this.builder})
+    : routerDelegate = delegate ?? Get.delegate<TDelegate, T>()!,
+      super(key: key);
 
   RouterOutlet({
     Key? key,
@@ -27,19 +25,19 @@ class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
       BuildContext context,
       TDelegate,
       Iterable<GetPage>? page,
-    ) pageBuilder,
+    )
+    pageBuilder,
   }) : this.builder(
-          builder: (context, rDelegate, currentConfig) {
-            var picked =
-                currentConfig == null ? null : pickPages(currentConfig);
-            if (picked?.isEmpty ?? false) {
-              picked = null;
-            }
-            return pageBuilder(context, rDelegate, picked);
-          },
-          delegate: delegate,
-          key: key,
-        );
+         builder: (context, rDelegate, currentConfig) {
+           var picked = currentConfig == null ? null : pickPages(currentConfig);
+           if (picked?.isEmpty ?? false) {
+             picked = null;
+           }
+           return pageBuilder(context, rDelegate, picked);
+         },
+         delegate: delegate,
+         key: key,
+       );
   @override
   RouterOutletState<TDelegate, T> createState() =>
       RouterOutletState<TDelegate, T>();
@@ -85,30 +83,27 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
     GlobalKey<NavigatorState>? navigatorKey,
     GetDelegate? delegate,
   }) : this.pickPages(
-          pickPages: (config) {
-            Iterable<GetPage<dynamic>> ret;
-            if (anchorRoute == null) {
-              // jump the ancestor path
-              final length = Uri.parse(initialRoute).pathSegments.length;
+         pickPages: (config) {
+           Iterable<GetPage<dynamic>> ret;
+           if (anchorRoute == null) {
+             // jump the ancestor path
+             final length = Uri.parse(initialRoute).pathSegments.length;
 
-              return config.currentTreeBranch
-                  .skip(length)
-                  .take(length)
-                  .toList();
-            }
-            ret = config.currentTreeBranch.pickAfterRoute(anchorRoute);
-            if (filterPages != null) {
-              ret = filterPages(ret);
-            }
-            return ret;
-          },
-          emptyPage: (delegate) =>
-              Get.routeTree.matchRoute(initialRoute).route ??
-              delegate.notFoundRoute,
-          key: key,
-          navigatorKey: navigatorKey,
-          delegate: delegate,
-        );
+             return config.currentTreeBranch.skip(length).take(length).toList();
+           }
+           ret = config.currentTreeBranch.pickAfterRoute(anchorRoute);
+           if (filterPages != null) {
+             ret = filterPages(ret);
+           }
+           return ret;
+         },
+         emptyPage: (delegate) =>
+             Get.routeTree.matchRoute(initialRoute).route ??
+             delegate.notFoundRoute,
+         key: key,
+         navigatorKey: navigatorKey,
+         delegate: delegate,
+       );
   GetRouterOutlet.pickPages({
     Key? key,
     Widget Function(GetDelegate delegate)? emptyWidget,
@@ -118,32 +113,33 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
     GlobalKey<NavigatorState>? navigatorKey,
     GetDelegate? delegate,
   }) : super(
-          pageBuilder: (context, rDelegate, pages) {
-            final pageRes = <GetPage?>[
-              ...?pages,
-              if (pages == null || pages.isEmpty) emptyPage?.call(rDelegate),
-            ].whereType<GetPage>();
+         pageBuilder: (context, rDelegate, pages) {
+           final pageRes = <GetPage?>[
+             ...?pages,
+             if (pages == null || pages.isEmpty) emptyPage?.call(rDelegate),
+           ].whereType<GetPage>();
 
-            if (pageRes.isNotEmpty) {
-              return GetNavigator(
-                onPopPage: onPopPage ??
-                    (route, result) {
-                      final didPop = route.didPop(result);
-                      if (!didPop) {
-                        return false;
-                      }
-                      return true;
-                    },
-                pages: pageRes.toList(),
-                key: navigatorKey,
-              );
-            }
-            return (emptyWidget?.call(rDelegate) ?? const SizedBox.shrink());
-          },
-          pickPages: pickPages,
-          delegate: delegate ?? Get.rootDelegate,
-          key: key,
-        );
+           if (pageRes.isNotEmpty) {
+             return GetNavigator(
+               onPopPage:
+                   onPopPage ??
+                   (route, result) {
+                     final didPop = route.didPop(result);
+                     if (!didPop) {
+                       return false;
+                     }
+                     return true;
+                   },
+               pages: pageRes.toList(),
+               key: navigatorKey,
+             );
+           }
+           return (emptyWidget?.call(rDelegate) ?? const SizedBox.shrink());
+         },
+         pickPages: pickPages,
+         delegate: delegate ?? Get.rootDelegate,
+         key: key,
+       );
 
   GetRouterOutlet.builder({
     Key? key,
@@ -151,13 +147,10 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
       BuildContext context,
       GetDelegate delegate,
       GetNavConfig? currentRoute,
-    ) builder,
+    )
+    builder,
     GetDelegate? routerDelegate,
-  }) : super.builder(
-          builder: builder,
-          delegate: routerDelegate,
-          key: key,
-        );
+  }) : super.builder(builder: builder, delegate: routerDelegate, key: key);
 }
 
 extension PagesListExt on List<GetPage> {

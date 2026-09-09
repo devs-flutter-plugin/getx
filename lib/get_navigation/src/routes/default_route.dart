@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../get.dart';
 import '../router_report.dart';
@@ -97,7 +97,7 @@ class GetPageRoute<T> extends PageRoute<T>
 
     final localbindings = [
       if (bindings != null) ...bindings!,
-      if (binding != null) ...[binding!]
+      if (binding != null) ...[binding!],
     ];
     final bindingsToBind = middlewareRunner.runOnBindingsStart(localbindings);
     if (bindingsToBind != null) {

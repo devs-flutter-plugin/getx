@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -6,9 +6,7 @@ import '../navigation/utils/wrapper.dart';
 
 void main() {
   testWidgets("Get.defaultDialog smoke test", (tester) async {
-    await tester.pumpWidget(
-      Wrapper(child: Container()),
-    );
+    await tester.pumpWidget(Wrapper(child: Container()));
 
     await tester.pumpAndSettle();
 

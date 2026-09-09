@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -6,19 +6,19 @@ import 'utils/wrapper.dart';
 
 void main() {
   testWidgets("Get.bottomSheet smoke test", (tester) async {
-    await tester.pumpWidget(
-      Wrapper(child: Container()),
-    );
+    await tester.pumpWidget(Wrapper(child: Container()));
 
-    Get.bottomSheet(Wrap(
-      children: <Widget>[
-        ListTile(
-          leading: const Icon(Icons.music_note),
-          title: const Text('Music'),
-          onTap: () {},
-        ),
-      ],
-    ));
+    Get.bottomSheet(
+      Wrap(
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(Icons.music_note),
+            title: const Text('Music'),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
 
     await tester.pumpAndSettle();
 
@@ -26,19 +26,19 @@ void main() {
   });
 
   testWidgets("Get.bottomSheet close test", (tester) async {
-    await tester.pumpWidget(
-      Wrapper(child: Container()),
-    );
+    await tester.pumpWidget(Wrapper(child: Container()));
 
-    Get.bottomSheet(Wrap(
-      children: <Widget>[
-        ListTile(
-          leading: const Icon(Icons.music_note),
-          title: const Text('Music'),
-          onTap: () {},
-        ),
-      ],
-    ));
+    Get.bottomSheet(
+      Wrap(
+        children: <Widget>[
+          ListTile(
+            leading: const Icon(Icons.music_note),
+            title: const Text('Music'),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
 
     expect(Get.isBottomSheetOpen, true);
 

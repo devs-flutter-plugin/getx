@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 
 import '../../domain/adapters/repository_adapter.dart';
@@ -28,8 +28,10 @@ class HomeController extends SuperController<CasesModel> {
 
   @override
   void onReady() {
-    print('The build method is done. '
-        'Your controller is ready to call dialogs and snackbars');
+    print(
+      'The build method is done. '
+      'Your controller is ready to call dialogs and snackbars',
+    );
     super.onReady();
   }
 
@@ -51,8 +53,10 @@ class HomeController extends SuperController<CasesModel> {
     super.didChangePlatformBrightness();
   }
 
-  @Deprecated('Use didPushRouteInformation instead. '
-      'This feature was deprecated after v3.8.0-14.0.pre.')
+  @Deprecated(
+    'Use didPushRouteInformation instead. '
+    'This feature was deprecated after v3.8.0-14.0.pre.',
+  )
   @override
   Future<bool> didPushRoute(String route) {
     print('the route $route will be open');

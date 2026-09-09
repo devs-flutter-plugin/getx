@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../get.dart';
@@ -131,10 +131,7 @@ class MiddlewareRunner {
 
   List<GetMiddleware> _getMiddlewares() {
     final m = _middlewares ?? <GetMiddleware>[];
-    return m
-      ..sort(
-        (a, b) => (a.priority ?? 0).compareTo(b.priority ?? 0),
-      );
+    return m..sort((a, b) => (a.priority ?? 0).compareTo(b.priority ?? 0));
   }
 
   GetPage? runOnPageCalled(GetPage? page) {
@@ -202,10 +199,7 @@ class PageRedirect {
       page: r.page,
       parameter: r.parameters,
       settings: isUnknown
-          ? RouteSettings(
-              name: r.name,
-              arguments: settings!.arguments,
-            )
+          ? RouteSettings(name: r.name, arguments: settings!.arguments)
           : settings,
       curve: r.curve,
       opaque: r.opaque,

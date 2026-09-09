@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../get.dart';
 
@@ -49,6 +49,7 @@ class SnackbarController {
   /// Close the snackbar with animation
   Future<void> close({bool withAnimations = true}) async {
     if (!withAnimations) {
+      _cancelTimer();
       _removeOverlay();
       return;
     }
@@ -96,8 +97,10 @@ class SnackbarController {
   }
 
   void _configureSnackBarDisplay() {
-    assert(!_transitionCompleter.isCompleted,
-        'Cannot configure a snackbar after disposing it.');
+    assert(
+      !_transitionCompleter.isCompleted,
+      'Cannot configure a snackbar after disposing it.',
+    );
     _controller = _createAnimationController();
     _configureAlignment(snackbar.snackPosition);
     _snackbarStatus = snackbar.snackbarStatus;
@@ -126,8 +129,10 @@ class SnackbarController {
   /// the transition controlled by the animation controller created by
   /// `createAnimationController()`.
   Animation<Alignment> _createAnimation() {
-    assert(!_transitionCompleter.isCompleted,
-        'Cannot create a animation from a disposed snackbar');
+    assert(
+      !_transitionCompleter.isCompleted,
+      'Cannot create a animation from a disposed snackbar',
+    );
     return AlignmentTween(begin: _initialAlignment, end: _endAlignment).animate(
       CurvedAnimation(
         parent: _controller,
@@ -141,8 +146,10 @@ class SnackbarController {
   /// to this route from the previous one, and back to the previous route
   /// from this one.
   AnimationController _createAnimationController() {
-    assert(!_transitionCompleter.isCompleted,
-        'Cannot create a animationController from a disposed snackbar');
+    assert(
+      !_transitionCompleter.isCompleted,
+      'Cannot create a animationController from a disposed snackbar',
+    );
     assert(snackbar.animationDuration >= Duration.zero);
     return AnimationController(
       duration: snackbar.animationDuration,
@@ -155,26 +162,19 @@ class SnackbarController {
     return Tween(begin: 0.0, end: snackbar.overlayBlur).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(
-          0.0,
-          0.35,
-          curve: Curves.easeInOutCirc,
-        ),
+        curve: const Interval(0.0, 0.35, curve: Curves.easeInOutCirc),
       ),
     );
   }
 
   Animation<Color?> _createColorOverlayColor() {
     return ColorTween(
-            begin: const Color(0x00000000), end: snackbar.overlayColor)
-        .animate(
+      begin: const Color(0x00000000),
+      end: snackbar.overlayColor,
+    ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(
-          0.0,
-          0.35,
-          curve: Curves.easeInOutCirc,
-        ),
+        curve: const Interval(0.0, 0.35, curve: Curves.easeInOutCirc),
       ),
     );
   }
@@ -229,14 +229,16 @@ class SnackbarController {
   }
 
   Widget _getBodyWidget() {
-    return Builder(builder: (_) {
-      return GestureDetector(
-        onTap: snackbar.onTap != null
-            ? () => snackbar.onTap?.call(snackbar)
-            : null,
-        child: snackbar,
-      );
-    });
+    return Builder(
+      builder: (_) {
+        return GestureDetector(
+          onTap: snackbar.onTap != null
+              ? () => snackbar.onTap?.call(snackbar)
+              : null,
+          child: snackbar,
+        );
+      },
+    );
   }
 
   DismissDirection _getDefaultDismissDirection() {
@@ -267,10 +269,7 @@ class SnackbarController {
   }
 
   Widget _getSnackbarContainer(Widget child) {
-    return Container(
-      margin: snackbar.margin,
-      child: child,
-    );
+    return Container(margin: snackbar.margin, child: child);
   }
 
   void _handleStatusChanged(AnimationStatus status) {
@@ -320,8 +319,10 @@ class SnackbarController {
       element.remove();
     }
 
-    assert(!_transitionCompleter.isCompleted,
-        'Cannot remove overlay from a disposed snackbar');
+    assert(
+      !_transitionCompleter.isCompleted,
+      'Cannot remove overlay from a disposed snackbar',
+    );
     _controller.dispose();
     _overlayEntries.clear();
     _transitionCompleter.complete();

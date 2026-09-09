@@ -1,3 +1,10 @@
+## [4.7.4]
+
+- Migrate Material and Cupertino APIs to the standalone `material_ui` and `cupertino_ui` packages for Flutter 3.47.2.
+- Raise the supported SDK baseline to Dart 3.13 and Flutter 3.47.2.
+- Fix Dart 3.13 compatibility in the GetX 4.7.3 codebase and legacy tests/examples.
+- Cancel Snackbar duration timers on immediate close and keep Cupertino back-swipe transitions linear during interactive gestures.
+
 ## [4.7.3]
 
 Fix Snackbar in Flutter 3.38

@@ -1,7 +1,8 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+
 import '../controllers/home_controller.dart';
 
 class DetailsView extends GetView<HomeController> {
@@ -15,7 +16,8 @@ class DetailsView extends GetView<HomeController> {
           fit: BoxFit.cover,
           colorFilter: ColorFilter.linearToSrgbGamma(),
           image: NetworkImage(
-              "https://flagpedia.net/data/flags/normal/${country.countryCode.toLowerCase()}.png"),
+            "https://flagpedia.net/data/flags/normal/${country.countryCode.toLowerCase()}.png",
+          ),
         ),
       ),
       child: BackdropFilter(
@@ -30,54 +32,34 @@ class DetailsView extends GetView<HomeController> {
               centerTitle: true,
             ),
             body: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${country.country}',
-                  style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 35,
-                ),
-                Text(
-                  'total_confirmed'.tr,
-                  style: TextStyle(
-                    fontSize: 25,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${country.country}',
+                    style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Text(
-                  '${country.totalConfirmed}',
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'total_deaths'.tr,
-                  style: TextStyle(
-                    fontSize: 25,
+                  SizedBox(height: 35),
+                  Text('total_confirmed'.tr, style: TextStyle(fontSize: 25)),
+                  Text(
+                    '${country.totalConfirmed}',
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Text(
-                  '${country.totalDeaths}',
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'total_recovered'.tr,
-                  style: TextStyle(
-                    fontSize: 25,
+                  SizedBox(height: 10),
+                  Text('total_deaths'.tr, style: TextStyle(fontSize: 25)),
+                  Text(
+                    '${country.totalDeaths}',
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Text(
-                  '${country.totalRecovered}',
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                ),
-              ],
-            )),
+                  SizedBox(height: 10),
+                  Text('total_recovered'.tr, style: TextStyle(fontSize: 25)),
+                  Text(
+                    '${country.totalRecovered}',
+                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

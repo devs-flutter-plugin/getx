@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../../../get_instance/src/get_instance.dart';
 import '../../../instance_manager.dart';
 import '../../get_state_manager.dart';
@@ -24,7 +25,8 @@ mixin GetStateUpdaterMixin<T extends StatefulWidget> on State<T> {
 }
 
 typedef GetControllerBuilder<T extends DisposableInterface> = Widget Function(
-    T controller);
+  T controller,
+);
 
 // class _InheritedGetxController<T extends GetxController>
 //     extends InheritedWidget {
@@ -63,7 +65,7 @@ class GetBuilder<T extends GetxController> extends StatefulWidget {
       dispose,
       didChangeDependencies;
   final void Function(GetBuilder oldWidget, GetBuilderState<T> state)?
-      didUpdateWidget;
+  didUpdateWidget;
   final T? init;
 
   const GetBuilder({
@@ -152,9 +154,7 @@ class GetBuilderState<T extends GetxController> extends State<GetBuilder<T>>
   void _subscribeToController() {
     _remove?.call();
     _remove = (widget.id == null)
-        ? controller?.addListener(
-            _filter != null ? _filterUpdate : getUpdate,
-          )
+        ? controller?.addListener(_filter != null ? _filterUpdate : getUpdate)
         : controller?.addListenerId(
             widget.id,
             _filter != null ? _filterUpdate : getUpdate,

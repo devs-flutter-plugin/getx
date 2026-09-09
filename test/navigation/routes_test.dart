@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -7,13 +7,16 @@ void main() {
     await tester.pumpWidget(
       GetCupertinoApp(
         popGesture: true,
+        defaultTransition: Transition.cupertino,
         home: CupertinoPageScaffold(
           child: Center(
             child: CupertinoButton(
               onPressed: () {
-                Get.to(() => const CupertinoPageScaffold(
-                      child: Center(child: Text('route')),
-                    ));
+                Get.to(
+                  () => const CupertinoPageScaffold(
+                    child: Center(child: Text('route')),
+                  ),
+                );
               },
               child: const Text('push'),
             ),
@@ -28,9 +31,17 @@ void main() {
     expect(find.text('push'), findsNothing);
 
     var gesture = await tester.startGesture(const Offset(5, 300));
-    await gesture.moveBy(const Offset(600, 0));
+    await gesture.moveBy(const Offset(400, 0));
     await tester.pump();
 
+    final routeScaffold = find.ancestor(
+      of: find.text('route'),
+      matching: find.byType(CupertinoPageScaffold),
+    );
+    expect(
+      tester.getTopLeft(routeScaffold).dx,
+      moreOrLessEquals(400, epsilon: 1),
+    );
     expect(
       tester
           .state<NavigatorState>(find.byType(Navigator))
@@ -40,7 +51,6 @@ void main() {
 
     await gesture.up();
     await tester.pumpAndSettle();
-
     expect(find.text('push'), findsOneWidget);
     expect(find.text('route'), findsNothing);
     expect(
@@ -50,18 +60,23 @@ void main() {
       false,
     );
 
-    // Start another interactive pop and push a new route while the route is
-    // completing its dismiss animation. Flutter 3.47 changed the exact
-    // Cupertino transition geometry, so this test validates navigator state
-    // instead of internal pixel offsets.
     await tester.tap(find.text('push'));
     await tester.pumpAndSettle();
     expect(find.text('route'), findsOneWidget);
     expect(find.text('push'), findsNothing);
 
     gesture = await tester.startGesture(const Offset(5, 300));
-    await gesture.moveBy(const Offset(600, 0));
+    await gesture.moveBy(const Offset(400, 0));
     await tester.pump();
+
+    final dismissingRouteScaffold = find.ancestor(
+      of: find.text('route'),
+      matching: find.byType(CupertinoPageScaffold),
+    );
+    expect(
+      tester.getTopLeft(dismissingRouteScaffold).dx,
+      moreOrLessEquals(400, epsilon: 1),
+    );
     expect(
       tester
           .state<NavigatorState>(find.byType(Navigator))
@@ -70,11 +85,11 @@ void main() {
     );
 
     await gesture.up();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 210));
 
-    Get.to(() => const CupertinoPageScaffold(
-          child: Center(child: Text('route')),
-        ));
+    Get.to(
+      () => const CupertinoPageScaffold(child: Center(child: Text('route'))),
+    );
 
     await tester.pumpAndSettle();
     expect(find.text('route'), findsOneWidget);

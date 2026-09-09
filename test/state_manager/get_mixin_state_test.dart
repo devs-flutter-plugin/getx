@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -11,31 +11,17 @@ void main() {
           builder: (controller) {
             return Column(
               children: [
-                Text(
-                  'Count: ${controller.counter.value}',
-                ),
-                Text(
-                  'Count2: ${controller.count}',
-                ),
-                Text(
-                  'Double: ${controller.doubleNum.value}',
-                ),
-                Text(
-                  'String: ${controller.string.value}',
-                ),
-                Text(
-                  'List: ${controller.list.length}',
-                ),
-                Text(
-                  'Bool: ${controller.boolean.value}',
-                ),
-                Text(
-                  'Map: ${controller.map.length}',
-                ),
+                Text('Count: ${controller.counter.value}'),
+                Text('Count2: ${controller.count}'),
+                Text('Double: ${controller.doubleNum.value}'),
+                Text('String: ${controller.string.value}'),
+                Text('List: ${controller.list.length}'),
+                Text('Bool: ${controller.boolean.value}'),
+                Text('Map: ${controller.map.length}'),
                 TextButton(
                   child: const Text("increment"),
                   onPressed: () => controller.increment(),
-                )
+                ),
               ],
             );
           },

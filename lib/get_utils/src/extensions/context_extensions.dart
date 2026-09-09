@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../platform/platform.dart';
 
@@ -122,12 +122,7 @@ extension ContextExtensionss on BuildContext {
   /// and less than 1200 return [tablet] value.
   /// if the device width is less than 300  return [watch] value.
   /// in other cases return [mobile] value.
-  T responsiveValue<T>({
-    T? mobile,
-    T? tablet,
-    T? desktop,
-    T? watch,
-  }) {
+  T responsiveValue<T>({T? mobile, T? tablet, T? desktop, T? watch}) {
     var deviceWidth = mediaQuerySize.shortestSide;
     if (GetPlatform.isDesktop) {
       deviceWidth = mediaQuerySize.width;

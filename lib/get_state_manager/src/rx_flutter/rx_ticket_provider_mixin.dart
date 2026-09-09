@@ -1,7 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../../get_state_manager.dart';
@@ -36,9 +36,11 @@ mixin GetSingleTickerProviderStateMixin on GetxController
       if (_ticker == null) return true;
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary(
-            '$runtimeType is a GetSingleTickerProviderStateMixin but multiple tickers were created.'),
+          '$runtimeType is a GetSingleTickerProviderStateMixin but multiple tickers were created.',
+        ),
         ErrorDescription(
-            'A GetSingleTickerProviderStateMixin can only be used as a TickerProvider once.'),
+          'A GetSingleTickerProviderStateMixin can only be used as a TickerProvider once.',
+        ),
         ErrorHint(
           'If a State is used for multiple AnimationController objects, or if it is passed to other '
           'objects and those objects might use it more than one time in total, then instead of '
@@ -46,8 +48,10 @@ mixin GetSingleTickerProviderStateMixin on GetxController
         ),
       ]);
     }());
-    _ticker =
-        Ticker(onTick, debugLabel: kDebugMode ? 'created by $this' : null);
+    _ticker = Ticker(
+      onTick,
+      debugLabel: kDebugMode ? 'created by $this' : null,
+    );
     // We assume that this is called from initState, build, or some sort of
     // event handler, and that thus TickerMode.of(context) would return true. We
     // can't actually check that here because if we're in initState then we're
@@ -113,8 +117,11 @@ mixin GetTickerProviderStateMixin on GetxController implements TickerProvider {
   @override
   Ticker createTicker(TickerCallback onTick) {
     _tickers ??= <_WidgetTicker>{};
-    final result = _WidgetTicker(onTick, this,
-        debugLabel: kDebugMode ? 'created by ${describeIdentity(this)}' : null);
+    final result = _WidgetTicker(
+      onTick,
+      this,
+      debugLabel: kDebugMode ? 'created by ${describeIdentity(this)}' : null,
+    );
     _tickers!.add(result);
     return result;
   }
@@ -165,7 +172,7 @@ mixin GetTickerProviderStateMixin on GetxController implements TickerProvider {
 
 class _WidgetTicker extends Ticker {
   _WidgetTicker(TickerCallback onTick, this._creator, {String? debugLabel})
-      : super(onTick, debugLabel: debugLabel);
+    : super(onTick, debugLabel: debugLabel);
 
   final GetTickerProviderStateMixin _creator;
 
@@ -177,7 +184,6 @@ class _WidgetTicker extends Ticker {
 }
 
 @Deprecated('use GetSingleTickerProviderStateMixin')
-
 /// Used like `SingleTickerProviderMixin` but only with Get Controllers.
 /// Simplifies AnimationController creation inside GetxController.
 ///

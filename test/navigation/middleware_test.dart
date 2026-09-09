@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -17,9 +17,10 @@ void main() {
         getPages: [
           GetPage(name: '/', page: Container.new),
           GetPage(
-              name: '/first',
-              page: FirstScreen.new,
-              middlewares: [RedirectMiddleware()]),
+            name: '/first',
+            page: FirstScreen.new,
+            middlewares: [RedirectMiddleware()],
+          ),
           GetPage(name: '/second', page: SecondScreen.new),
           GetPage(name: '/third', page: ThirdScreen.new),
         ],

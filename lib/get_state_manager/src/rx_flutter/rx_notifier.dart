@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../../../instance_manager.dart';
@@ -65,11 +65,14 @@ mixin StateMixin<T> on ListNotifierMixin {
 
   void append(Future<T> Function() Function() body, {String? errorMessage}) {
     final compute = body();
-    compute().then((newValue) {
-      change(newValue, status: RxStatus.success());
-    }, onError: (err) {
-      change(state, status: RxStatus.error(errorMessage ?? err.toString()));
-    });
+    compute().then(
+      (newValue) {
+        change(newValue, status: RxStatus.success());
+      },
+      onError: (err) {
+        change(state, status: RxStatus.error(errorMessage ?? err.toString()));
+      },
+    );
   }
 }
 
@@ -139,19 +142,21 @@ extension StateExt<T> on StateMixin<T> {
     Widget? onLoading,
     Widget? onEmpty,
   }) {
-    return SimpleBuilder(builder: (_) {
-      if (status.isLoading) {
-        return onLoading ?? const Center(child: CircularProgressIndicator());
-      } else if (status.isError) {
-        return onError != null
-            ? onError(status.errorMessage)
-            : Center(child: Text('A error occurred: ${status.errorMessage}'));
-      } else if (status.isEmpty) {
-        return onEmpty ??
-            const SizedBox.shrink(); // Also can be widget(null); but is risky
-      }
-      return widget(value);
-    });
+    return SimpleBuilder(
+      builder: (_) {
+        if (status.isLoading) {
+          return onLoading ?? const Center(child: CircularProgressIndicator());
+        } else if (status.isError) {
+          return onError != null
+              ? onError(status.errorMessage)
+              : Center(child: Text('A error occurred: ${status.errorMessage}'));
+        } else if (status.isEmpty) {
+          return onEmpty ??
+              const SizedBox.shrink(); // Also can be widget(null); but is risky
+        }
+        return widget(value);
+      },
+    );
   }
 }
 

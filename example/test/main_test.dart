@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/material.dart';
+
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:get_demo/pages/home/domain/adapters/repository_adapter.dart';
@@ -18,13 +19,14 @@ class MockRepository implements IHomeRepository {
     if (Random().nextBool()) {
       return CasesModel(
         global: Global(
-            totalDeaths: 100,
-            totalConfirmed: 200,
-            date: DateTime.now(),
-            newConfirmed: 0,
-            newDeaths: 0,
-            newRecovered: 0,
-            totalRecovered: 0),
+          totalDeaths: 100,
+          totalConfirmed: 200,
+          date: DateTime.now(),
+          newConfirmed: 0,
+          newDeaths: 0,
+          newRecovered: 0,
+          totalRecovered: 0,
+        ),
         countries: [],
         date: DateTime.now(),
         id: '',
@@ -42,7 +44,8 @@ void main() {
   final binding = BindingsBuilder(() {
     Get.lazyPut<IHomeRepository>(() => MockRepository());
     Get.lazyPut<HomeController>(
-        () => HomeController(homeRepository: Get.find()));
+      () => HomeController(homeRepository: Get.find()),
+    );
   });
 
   test('Test Binding', () {
