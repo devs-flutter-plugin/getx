@@ -7,8 +7,8 @@ void main() {
   test('once', () async {
     final count = 0.obs;
     var result = -1;
-    once(count, (dynamic _) {
-      result = _ as int;
+    once(count, (dynamic value) {
+      result = value as int;
     });
     count.value++;
     await Future.delayed(Duration.zero);
@@ -41,9 +41,8 @@ void main() {
   test('debounce', () async {
     final count = 0.obs;
     int? result = -1;
-    debounce(count, (dynamic _) {
-      // print(_);
-      result = _ as int?;
+    debounce(count, (dynamic value) {
+      result = value as int?;
     }, time: const Duration(milliseconds: 100));
 
     count.value++;
@@ -59,9 +58,8 @@ void main() {
   test('interval', () async {
     final count = 0.obs;
     int? result = -1;
-    interval(count, (dynamic _) {
-      // print(_);
-      result = _ as int?;
+    interval(count, (dynamic value) {
+      result = value as int?;
     }, time: const Duration(milliseconds: 100));
 
     count.value++;
@@ -104,9 +102,7 @@ void main() {
       timesCalled++;
     });
 
-    // we call 3
     reactiveInteger.call(3);
-    // then repeat twice
     reactiveInteger.call(3);
     reactiveInteger.call(3);
 
@@ -121,9 +117,7 @@ void main() {
       timesCalled++;
     });
 
-    // we call 3
     reactiveInteger.trigger(1);
-    // then repeat twice
     reactiveInteger.trigger(2);
     reactiveInteger.trigger(3);
 
@@ -138,9 +132,7 @@ void main() {
       timesCalled++;
     });
 
-    // we call 3
     reactiveInteger.trigger(3);
-    // then repeat twice
     reactiveInteger.trigger(3);
     reactiveInteger.trigger(3);
     reactiveInteger.trigger(1);
@@ -157,8 +149,6 @@ void main() {
     });
 
     expect(reactiveString.endsWith("c"), true);
-
-    // we call 3
     reactiveString("b");
 
     await Future.delayed(Duration.zero);
@@ -173,7 +163,6 @@ void main() {
       currentString = newString;
     });
 
-    // we call 3
     reactiveString("abc");
 
     await Future.delayed(Duration.zero);
