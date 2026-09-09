@@ -1,9 +1,6 @@
 name: migrate-flutter-3.47
 
 on:
-  push:
-    branches:
-      - flutter-3.47.2-getx-4.7.4
   workflow_dispatch:
 
 permissions:
