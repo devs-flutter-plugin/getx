@@ -1,4 +1,4 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
@@ -9,8 +9,6 @@ void main() {
     await tester.pumpWidget(
       Wrapper(child: Container()),
     );
-
-    await tester.pump();
 
     Get.bottomSheet(Wrap(
       children: <Widget>[
@@ -32,8 +30,6 @@ void main() {
       Wrapper(child: Container()),
     );
 
-    await tester.pump();
-
     Get.bottomSheet(Wrap(
       children: <Widget>[
         ListTile(
@@ -44,13 +40,9 @@ void main() {
       ],
     ));
 
-    await tester.pumpAndSettle();
-
     expect(Get.isBottomSheetOpen, true);
 
-    Get.backLegacy();
-    await tester.pumpAndSettle();
-
+    Get.back();
     expect(Get.isBottomSheetOpen, false);
 
     // expect(() => Get.bottomSheet(Container(), isScrollControlled: null),

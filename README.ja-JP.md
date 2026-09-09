@@ -455,16 +455,16 @@ GetConnectを拡張することで、GET/POST/PUT/DELETE/SOCKETメソッドを�
 ```dart
 class UserProvider extends GetConnect {
   // Get リクエスト
-  Future<Response> getUser(int id) => get('http://yourapi/users/$id');
+  Future<Response> getUser(int id) => get('http://youapi/users/$id');
   // Post リクエスト
-  Future<Response> postUser(Map data) => post('http://yourapi/users', body: data);
+  Future<Response> postUser(Map data) => post('http://youapi/users', body: data);
   // File付き Post リクエスト
   Future<Response<CasesModel>> postCases(List<int> image) {
     final form = FormData({
       'file': MultipartFile(image, filename: 'avatar.png'),
       'otherFile': MultipartFile(image, filename: 'cover.png'),
     });
-    return post('http://yourapi/users/upload', form);
+    return post('http://youapi/users/upload', form);
   }
 
   GetSocket userMessages() {
