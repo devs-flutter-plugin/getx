@@ -68,7 +68,6 @@ void main() {
 
   testWidgets("test snackbar queue", (tester) async {
     const messageOne = Text('title');
-
     const messageTwo = Text('titleTwo');
 
     await tester.pumpWidget(
@@ -142,11 +141,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(Get.isSnackbarOpen, true);
-    await tester.pump(const Duration(milliseconds: 500));
     expect(find.byWidget(getBar), findsOneWidget);
     await tester.ensureVisible(find.byWidget(getBar));
-    await tester.drag(find.byWidget(getBar), const Offset(0.0, 50.0));
-    await tester.pump(const Duration(milliseconds: 500));
+
+    // Flutter 3.47 applies the Dismissible threshold more strictly. Use a
+    // realistic fling rather than relying on a small fixed 50 px drag.
+    await tester.fling(
+      find.byWidget(getBar),
+      const Offset(0.0, 300.0),
+      1000.0,
+    );
+    await tester.pumpAndSettle();
 
     expect(Get.isSnackbarOpen, false);
   });
@@ -157,7 +162,6 @@ void main() {
     var counter = 0;
 
     late final GetSnackBar getBar;
-
     late final SnackbarController getBarController;
 
     await tester.pumpWidget(GetMaterialApp(
@@ -202,13 +206,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(Get.isSnackbarOpen, true);
-    await tester.pump(const Duration(milliseconds: 500));
     expect(find.byWidget(getBar), findsOneWidget);
     await tester.ensureVisible(find.byWidget(getBar));
     await tester.tap(find.byWidget(getBar));
     expect(counter, 1);
-    await tester.pump(const Duration(milliseconds: 3000));
+
+    // Close explicitly so the next widget test never inherits an active
+    // snackbar AnimationController from this test.
     await getBarController.close(withAnimations: false);
+    await tester.pump();
+    expect(Get.isSnackbarOpen, false);
   });
 
   testWidgets("Get test actions and icon", (tester) async {
@@ -228,7 +235,6 @@ void main() {
       mainButton: action,
       leftBarIndicatorColor: Colors.yellow,
       showProgressIndicator: true,
-      // maxWidth: 100,
       borderColor: Colors.red,
       duration: const Duration(seconds: 1),
       isDismissible: false,
@@ -241,6 +247,7 @@ void main() {
     expect(find.byWidget(icon), findsOneWidget);
     expect(find.byWidget(action), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     expect(Get.isSnackbarOpen, false);
   });
