@@ -133,7 +133,7 @@ class GetStream<T> {
       GetStreamTransformation(addSubscription, removeSubscription);
 }
 
-class LightSubscription<T> extends StreamSubscription<T> {
+class LightSubscription<T> implements StreamSubscription<T> {
   final RemoveSubscription<T> _removeSubscription;
   LightSubscription(this._removeSubscription,
       {this.onPause, this.onResume, this.onCancel});
