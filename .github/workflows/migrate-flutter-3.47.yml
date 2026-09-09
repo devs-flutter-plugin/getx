@@ -1,0 +1,58 @@
+name: migrate-flutter-3.47
+
+on:
+  push:
+    branches:
+      - flutter-3.47.2-getx-4.7.4
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Apply Flutter design widgets migration
+        run: dart fix --apply --code=migrate_design_widgets
+
+      - name: Format Dart sources
+        run: dart format lib test example
+
+      - name: Ensure legacy design imports are gone from Dart sources
+        shell: bash
+        run: |
+          if grep -R -n -E "package:flutter/(material|cupertino)\.dart" lib test example --include='*.dart'; then
+            echo 'Legacy material.dart/cupertino.dart imports still exist.'
+            exit 1
+          fi
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Commit migration
+        shell: bash
+        run: |
+          git config user.name 'devstecnologia'
+          git config user.email '58450364+devstecnologia@users.noreply.github.com'
+          git add lib test example pubspec.yaml pubspec.lock
+          if git diff --cached --quiet; then
+            echo 'No migration changes to commit.'
+          else
+            git commit -m 'Flutter 3.47.2: migrate GetX 4.7.3 to standalone design packages'
+            git push
+          fi
