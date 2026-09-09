@@ -59,6 +59,7 @@ jobs:
               await tester.pumpWidget(
                 GetCupertinoApp(
                   popGesture: true,
+                  defaultTransition: Transition.cupertino,
                   home: CupertinoPageScaffold(
                     child: Center(
                       child: CupertinoButton(
