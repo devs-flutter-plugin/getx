@@ -35,3 +35,5 @@ jobs:
 
       - name: Upload coverage
         uses: codecov/codecov-action@v7
+
+# Public repositories are explicitly enabled for the organization self-hosted runner group.
