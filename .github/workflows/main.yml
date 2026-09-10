@@ -8,7 +8,9 @@ on:
 
 jobs:
   test:
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
+      - devs-flutter-plugin-ci
     defaults:
       run:
         working-directory: ./
